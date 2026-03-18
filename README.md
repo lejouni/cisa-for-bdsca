@@ -536,7 +536,7 @@ MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-- **Black Duck** by Synopsys for vulnerability data
+- **Black Duck** for vulnerability data
 - **CISA** for KEV catalog
 - **ENISA** for EUVD-CVE mapping API
 
