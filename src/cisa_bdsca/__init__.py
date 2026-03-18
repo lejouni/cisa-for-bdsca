@@ -17,7 +17,7 @@ Usage as CLI:
     python -m cisa_bdsca collect --ids "CVE-2021-44228,BDSA-2023-1234"
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = ["collect_cisa_data", "BlackDuckClient"]
 
 # Lazy imports to avoid circular dependencies
