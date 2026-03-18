@@ -1,0 +1,383 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/cisa-bdsca/result-schema.json",
+  "title": "CISA BDSCA Collection Result",
+  "description": "Schema for CISA vulnerability data collection results from cisa-bdsca tool",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "total_count",
+    "success_count",
+    "error_count",
+    "cve_count",
+    "euvd_count",
+    "bdsa_count",
+    "cisa_available_count",
+    "kev_count",
+    "vulnerabilities",
+    "errors"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the collection was performed"
+    },
+    "total_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of vulnerabilities processed"
+    },
+    "success_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of vulnerabilities successfully processed"
+    },
+    "error_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of vulnerabilities that failed processing"
+    },
+    "cve_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of CVE (NVD) vulnerabilities processed"
+    },
+    "euvd_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of EUVD vulnerabilities processed"
+    },
+    "bdsa_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of BDSA vulnerabilities processed"
+    },
+    "cisa_available_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of vulnerabilities with CISA data available"
+    },
+    "kev_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of vulnerabilities in CISA KEV catalog"
+    },
+    "vulnerabilities": {
+      "type": "array",
+      "description": "List of processed vulnerabilities with their data",
+      "items": {
+        "$ref": "#/$defs/vulnerability"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "description": "List of errors encountered during processing",
+      "items": {
+        "$ref": "#/$defs/error"
+      }
+    }
+  },
+  "$defs": {
+    "vulnerability": {
+      "type": "object",
+      "required": [
+        "id",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Vulnerability ID (CVE, EUVD, or BDSA format)",
+          "pattern": "^(CVE-[0-9]{4}-[0-9]{4,}|EUVD-[0-9]{4}-[0-9]+|BDSA-[0-9]{4}-[0-9]+)$",
+          "examples": [
+            "CVE-2021-44228",
+            "BDSA-2023-1234",
+            "EUVD-2024-5678"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "NVD",
+            "EUVD",
+            "BDSA"
+          ],
+          "description": "Source database for the vulnerability"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Detailed description of the vulnerability"
+        },
+        "published_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date when the vulnerability was first published"
+        },
+        "updated_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date when the vulnerability information was last updated"
+        },
+        "severity": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "INFO",
+            null
+          ],
+          "description": "Severity rating of the vulnerability"
+        },
+        "base_score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10,
+          "description": "CVSS base score (0.0-10.0)"
+        },
+        "related_cves": {
+          "type": "array",
+          "description": "Related CVEs with their CISA data (populated for BDSA/EUVD vulnerabilities)",
+          "items": {
+            "$ref": "#/$defs/relatedCVE"
+          }
+        },
+        "mapping_source": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "Black Duck",
+            "ENISA",
+            null
+          ],
+          "description": "Source of CVE mapping for non-CVE vulnerabilities"
+        },
+        "cisa_data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cisaData"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "CISA KEV data (present at top level only for direct CVE queries; for BDSA/EUVD, see related_cves)"
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Error message if vulnerability data could not be retrieved"
+        }
+      }
+    },
+    "relatedCVE": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "CVE ID",
+          "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$",
+          "examples": [
+            "CVE-2021-44228"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "CVE description"
+        },
+        "published_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "CVE publication date"
+        },
+        "updated_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "CVE last update date"
+        },
+        "severity": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "INFO",
+            null
+          ],
+          "description": "Severity rating"
+        },
+        "base_score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10,
+          "description": "CVSS base score"
+        },
+        "cisa_data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cisaData"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "CISA KEV data for this CVE"
+        }
+      }
+    },
+    "cisaData": {
+      "type": "object",
+      "description": "CISA Known Exploited Vulnerabilities (KEV) catalog data. If this object exists (not null), the vulnerability is in the CISA KEV catalog.",
+      "properties": {
+        "date_added": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date added to CISA KEV catalog (YYYY-MM-DD or ISO 8601 format)",
+          "examples": [
+            "2021-12-10",
+            "2021-12-10T00:00:00.000Z"
+          ]
+        },
+        "due_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Remediation due date per CISA directive (YYYY-MM-DD or ISO 8601 format)",
+          "examples": [
+            "2021-12-24",
+            "2021-12-24T00:00:00.000Z"
+          ]
+        },
+        "required_action": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Required action from CISA to remediate the vulnerability"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Additional notes from CISA about the vulnerability"
+        },
+        "vendor_project": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Vendor or project name (available when using --use-kev-catalog)"
+        },
+        "product": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Affected product name (available when using --use-kev-catalog)"
+        },
+        "vulnerability_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Official vulnerability name (available when using --use-kev-catalog)"
+        },
+        "short_description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Short description of the vulnerability (available when using --use-kev-catalog)"
+        },
+        "known_ransomware_campaign_use": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "Known",
+            "Unknown",
+            null
+          ],
+          "description": "'Known' if used in ransomware campaigns, 'Unknown' if not confirmed (available when using --use-kev-catalog)"
+        },
+        "cwes": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "pattern": "^CWE-[0-9]+$",
+            "examples": [
+              "CWE-79",
+              "CWE-89"
+            ]
+          },
+          "description": "Common Weakness Enumeration codes (available when using --use-kev-catalog)"
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "vulnerability_id",
+        "error"
+      ],
+      "properties": {
+        "vulnerability_id": {
+          "type": "string",
+          "description": "ID of the vulnerability that failed"
+        },
+        "error": {
+          "type": "string",
+          "description": "Error message describing what went wrong"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+include result_schema.json
+include validate_result.py
+include README.md
+include LICENSE
+include install.ps1
+include release.ps1
+recursive-include src *.py

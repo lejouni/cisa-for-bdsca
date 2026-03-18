@@ -1,0 +1,16 @@
+# Sample vulnerability IDs for testing
+# Format: One vulnerability ID per line
+# Supports CVE, EUVD, and BDSA formats
+
+# CVE vulnerabilities (direct CISA data)
+CVE-2021-44228
+CVE-2023-23397
+CVE-2024-3094
+
+# BDSA vulnerabilities (maps to CVE via Black Duck)
+BDSA-2023-1234
+BDSA-2024-5678
+
+# EUVD vulnerabilities (maps to CVE via ENISA)
+EUVD-2024-1234
+EUVD-2024-5678
