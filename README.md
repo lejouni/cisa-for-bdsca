@@ -484,57 +484,6 @@ flake8 src/
 mypy src/
 ```
 
-### Creating a Release
-
-The project includes a PowerShell release script (`release.ps1`) that automates the release process:
-
-**Basic release (bump patch version):**
-```powershell
-# Dry run to see what would happen
-.\release.ps1 -DryRun
-
-# Actual release to PyPI
-.\release.ps1 -Part patch -Repository pypi
-```
-
-**Version bumping:**
-```powershell
-# Bump minor version (0.1.0 -> 0.2.0)
-.\release.ps1 -Part minor
-
-# Bump major version (0.1.0 -> 1.0.0)
-.\release.ps1 -Part major
-
-# Set explicit version
-.\release.ps1 -NewVersion 1.2.3
-```
-
-**Advanced options:**
-```powershell
-# Publish to TestPyPI first
-.\release.ps1 -Repository testpypi
-
-# Skip install verification
-.\release.ps1 -NoInstallTest
-
-# Create GitHub release with tag
-.\release.ps1 -CreateGitHubRelease -GitHubToken "ghp_..." -GitHubRepo "yourusername/cisa-for-bdsca"
-
-# Build only, no upload (for testing)
-.\release.ps1 -NoUpload
-
-# Use local build artifacts
-.\release.ps1 -SkipBuild -NoUpload
-```
-
-The script will:
-1. Update version in `pyproject.toml` and `src/cisa_bdsca/__init__.py`
-2. Build wheel and source distribution
-3. Upload to PyPI or TestPyPI
-4. Optionally create and push a git tag
-5. Optionally create a GitHub release
-6. Verify installation in a clean virtual environment
-
 ## Troubleshooting
 
 ### Authentication Failed

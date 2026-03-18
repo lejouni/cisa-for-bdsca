@@ -100,7 +100,7 @@ param(
 
   # Git/GitHub release options
   [switch]$CreateGitHubRelease,
-  [string]$GitHubRepo = 'yourusername/cisa-for-bdsca',
+  [string]$GitHubRepo = 'lejouni/cisa-for-bdsca',
   [string]$GitHubToken,
   [switch]$SkipGitTag,
   [string]$TagPrefix = 'v',
