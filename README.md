@@ -223,21 +223,6 @@ The module automatically detects vulnerability source by ID prefix:
 3. Extract CVE ID from link `href`
 4. Query Black Duck for CVE to get CISA data
 
-**Example BDSA metadata:**
-```json
-{
-  "_meta": {
-    "links": [
-      {
-        "rel": "related-vulnerability",
-        "href": "https://.../api/vulnerabilities/CVE-2020-11023",
-        "label": "NVD"
-      }
-    ]
-  }
-}
-```
-
 #### EUVD → CVE (External ENISA API)
 
 1. **Lazy loading**: Check if any EUVD IDs are in the input list
@@ -259,21 +244,6 @@ CISA data is only available for CVE vulnerabilities in Black Duck:
 
 - **KEV Status**: Known Exploited Vulnerabilities catalog inclusion
 - **Remediation**: Due dates and required actions
-
-**Black Duck CISA Data Structure:**
-```json
-{
-  "cisa": {
-    "vulnId": "CVE-2013-0248",
-    "addedDate": "2026-02-07T17:03:26.799Z",
-    "dueDate": "2026-02-18T17:03:26.799Z",
-    "requiredAction": "Required Action",
-    "vulnerabilityName": "Name"
-  }
-}
-```
-
-The module automatically detects and extracts this nested structure.
 
 ## Output Format
 
