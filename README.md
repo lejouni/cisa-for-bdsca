@@ -438,7 +438,7 @@ CISA Data Availability:
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────┐
-│                   Processor (Orchestration)              │
+│                   Processor (Orchestration)             │
 │  • Pre-scan for EUVD (lazy loading optimization)        │
 │  • Route by vulnerability source                        │
 └─────────────────────────────────────────────────────────┘
@@ -548,6 +548,38 @@ For issues or questions:
 - Review ENISA API documentation: https://euvdb.cert.europa.eu/
 
 ## Changelog
+
+### v0.1.2 (2026-03-19)
+
+**Dependency Updates:**
+- Updated typer: 0.9.0 → 0.24.0
+- Updated requests: 2.31.0 → 2.32.0
+- Updated pydantic: 2.0.0 → 2.12.0
+- Updated pydantic-settings: 2.0.0 → 2.13.0
+- Updated python-dotenv: 1.0.0 → 1.2.0
+- Updated pytest: 7.4.0 → 9.0.0
+- Updated pytest-cov: 4.1.0 → 7.0.0
+- Updated pytest-mock: 3.11.1 → 3.15.0
+- Updated black: 23.7.0 → 26.3.0
+- Updated flake8: 6.1.0 → 7.3.0
+- Updated mypy: 1.5.0 → 1.19.0
+- Updated types-requests: 2.31.0 → 2.32.0
+
+**Code Improvements:**
+- Fixed Pydantic deprecation warnings by migrating to ConfigDict
+- Applied Black 26.3.0 formatting standards across all source files
+- Improved code quality and maintainability
+
+### v0.1.1 (2026-03-18)
+
+**Major Features:**
+- Added CISA KEV Catalog as alternative data source (`--use-kev-catalog`)
+- Enhanced CISAData model with 6 additional fields (vendor_project, product, vulnerability_name, short_description, known_ransomware_campaign_use, cwes)
+- Created JSON Schema (draft-07) for result validation
+- Added standalone validation script (validate_result.py)
+
+**Bug Fixes:**
+- Fixed typer dependency (removed unsupported `[all]` extra)
 
 ### v0.1.0 (2026-03-18)
 
