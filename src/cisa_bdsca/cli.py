@@ -26,13 +26,13 @@ app = typer.Typer(
 def setup_logging(verbose: bool = False) -> None:
     """Configure logging based on verbosity level."""
     level = logging.DEBUG if verbose else logging.INFO
-    
+
     logging.basicConfig(
         level=level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    
+
     # Reduce noise from external libraries
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("requests").setLevel(logging.WARNING)
@@ -49,8 +49,13 @@ def version_callback(value: bool) -> None:
 def main(
     version: Annotated[
         Optional[bool],
-        typer.Option("--version", "-v", callback=version_callback, is_eager=True,
-                    help="Show version and exit"),
+        typer.Option(
+            "--version",
+            "-v",
+            callback=version_callback,
+            is_eager=True,
+            help="Show version and exit",
+        ),
     ] = None,
 ) -> None:
     """CISA vulnerability data collector for Black Duck SCA."""
@@ -81,7 +86,10 @@ def collect(
     ] = False,
     use_kev_catalog: Annotated[
         bool,
-        typer.Option("--use-kev-catalog", help="Use CISA KEV catalog as CISA data source (includes full vulnerability details)"),
+        typer.Option(
+            "--use-kev-catalog",
+            help="Use CISA KEV catalog as CISA data source (includes full vulnerability details)",
+        ),
     ] = False,
     env_file: Annotated[
         Optional[Path],
@@ -101,19 +109,19 @@ def collect(
     # Setup logging
     setup_logging(verbose)
     logger = logging.getLogger(__name__)
-    
+
     # Validate input
     if not ids and not ids_file:
         typer.echo("Error: Must provide either --ids or --ids-file", err=True)
         raise typer.Exit(1)
-    
+
     if ids and ids_file:
         typer.echo("Error: Cannot use both --ids and --ids-file", err=True)
         raise typer.Exit(1)
-    
+
     # Parse vulnerability IDs
     vuln_ids = []
-    
+
     if ids:
         # Parse comma-separated IDs
         vuln_ids = [vid.strip() for vid in ids.split(",") if vid.strip()]
@@ -128,20 +136,20 @@ def collect(
         except Exception as e:
             typer.echo(f"Error reading file {ids_file}: {e}", err=True)
             raise typer.Exit(1)
-    
+
     if not vuln_ids:
         typer.echo("Error: No vulnerability IDs provided", err=True)
         raise typer.Exit(1)
-    
+
     logger.info(f"Processing {len(vuln_ids)} vulnerability IDs")
-    
+
     # Load configuration
     try:
         config = load_config(str(env_file) if env_file else None)
     except Exception as e:
         typer.echo(f"Configuration error: {e}", err=True)
         raise typer.Exit(1)
-    
+
     # Process vulnerabilities
     try:
         result = process_vulnerabilities(vuln_ids, config, use_kev_catalog=use_kev_catalog)
@@ -149,10 +157,10 @@ def collect(
         typer.echo(f"Processing failed: {e}", err=True)
         logger.exception("Processing failed")
         raise typer.Exit(1)
-    
+
     # Print summary to console
     print_summary(result)
-    
+
     # Export to file if requested
     if output:
         try:
@@ -163,7 +171,7 @@ def collect(
             raise typer.Exit(1)
     else:
         typer.echo("\nNo output file specified. Use --output to save results.")
-    
+
     # Exit with error code if there were processing errors
     if result.error_count > 0:
         raise typer.Exit(1)
@@ -181,9 +189,9 @@ def config_check(
     Validates configuration and tests connection to Black Duck.
     """
     setup_logging(verbose=True)
-    
+
     typer.echo("Checking Black Duck configuration...")
-    
+
     # Load configuration
     try:
         config = load_config(str(env_file) if env_file else None)
@@ -194,24 +202,24 @@ def config_check(
     except Exception as e:
         typer.echo(f"✗ Configuration error: {e}", err=True)
         raise typer.Exit(1)
-    
+
     # Test connection
     try:
         from .client import BlackDuckClient
-        
+
         typer.echo("\nTesting Black Duck connection...")
         client = BlackDuckClient(config)
-        
+
         if client.check_connection():
             typer.echo("✓ Successfully connected to Black Duck")
         else:
             typer.echo("✗ Connection check failed", err=True)
             raise typer.Exit(1)
-            
+
     except Exception as e:
         typer.echo(f"✗ Connection failed: {e}", err=True)
         raise typer.Exit(1)
-    
+
     typer.echo("\n✓ All checks passed!")
 
 
@@ -227,7 +235,7 @@ def clear_cache(
     Forces fresh download on next EUVD query.
     """
     from .euvd_mapper import EUVDMapper
-    
+
     try:
         config = load_config(str(env_file) if env_file else None)
         mapper = EUVDMapper(config)

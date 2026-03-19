@@ -8,7 +8,7 @@ from typing import Optional
 
 from dotenv import load_dotenv
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Config(BaseSettings):
@@ -26,7 +26,7 @@ class Config(BaseSettings):
     euvd_cache_dir: Path = Field(
         default=Path.home() / ".cache" / "cisa-bdsca", alias="EUVD_CACHE_DIR"
     )
-    
+
     # KEV Catalog Cache Configuration
     kev_cache_dir: Path = Field(
         default=Path.home() / ".cache" / "cisa-bdsca", alias="KEV_CACHE_DIR"
@@ -69,12 +69,9 @@ class Config(BaseSettings):
         """Expand user paths and ensure they're Path objects."""
         return Path(v).expanduser()
 
-    class Config:
-        """Pydantic configuration."""
-
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=False
+    )
 
 
 def load_config(env_file: Optional[str] = None) -> Config:
